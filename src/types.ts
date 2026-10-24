@@ -73,6 +73,15 @@ export interface VacuumCardConfig {
   stats: Record<string, VacuumCardStat[]>;
   actions: Record<string, VacuumCardAction>;
   shortcuts: VacuumCardShortcut[];
+  selects: VacuumCardSelect[];
+  fan_speed_labels: Record<string, string>;
+}
+
+export interface VacuumCardSelect {
+  entity: string;
+  icon?: string;
+  name?: string;
+  labels?: Record<string, string>;
 }
 
 export interface VacuumServiceCallParams {

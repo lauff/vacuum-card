@@ -99,7 +99,22 @@ export class VacuumCard extends LitElement {
   }
 
   public shouldUpdate(changedProps: PropertyValues): boolean {
-    return hasConfigOrEntityChanged(this, changedProps, false);
+    if (hasConfigOrEntityChanged(this, changedProps, false)) {
+      return true;
+    }
+
+    // Also re-render when an extra entity shown in the header changes.
+    const oldHass = changedProps.get('hass') as HomeAssistant | undefined;
+    if (!oldHass) {
+      return false;
+    }
+    const extraEntities = [
+      this.config.battery_entity,
+      ...this.config.selects.map(({ entity }) => entity),
+    ].filter(Boolean);
+    return extraEntities.some(
+      (entityId) => oldHass.states[entityId] !== this.hass.states[entityId],
+    );
   }
 
   protected updated(changedProps: PropertyValues) {
@@ -261,8 +276,39 @@ export class VacuumCard extends LitElement {
       options: sources,
       onSelect: this.handleSpeed,
       formatLabel: (value: string) =>
-        localize(`source.${value.toLowerCase()}`) ?? value,
+        this.config.fan_speed_labels[value] ??
+        localize(`source.${value.toLowerCase()}`) ??
+        value,
       ariaLabel: localize('source.fan_speed') || 'Fan speed',
+    });
+  }
+
+  private renderSelects(): Template[] {
+    return this.config.selects.map(({ entity, icon, name, labels }) => {
+      const stateObj = this.hass.states[entity];
+      const options = stateObj?.attributes.options;
+
+      if (!stateObj || !Array.isArray(options) || options.length === 0) {
+        return nothing;
+      }
+
+      const [domain] = entity.split('.');
+      return this.renderDropdown({
+        icon: icon ?? stateIcon(stateObj) ?? 'mdi:format-list-bulleted',
+        value: stateObj.state,
+        options,
+        onSelect: (e: CustomEvent<{ item?: { value?: string } }>) => {
+          const option = e.detail.item?.value;
+          if (option && option !== stateObj.state) {
+            this.hass.callService(domain, 'select_option', {
+              entity_id: entity,
+              option,
+            });
+          }
+        },
+        formatLabel: (value: string) => labels?.[value] ?? value,
+        ariaLabel: name ?? stateObj.attributes.friendly_name ?? entity,
+      });
     });
   }
 
@@ -567,7 +613,8 @@ export class VacuumCard extends LitElement {
         <div class="preview">
           <div class="header">
             <div class="tips">
-              ${this.renderSource()} ${this.renderBattery()}
+              ${this.renderSource()} ${this.renderSelects()}
+              ${this.renderBattery()}
             </div>
             <ha-icon-button
               class="more-info"

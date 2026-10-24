@@ -106,21 +106,23 @@ shortcuts:
 
 Here is what every option means:
 
-| Name             |   Type    | Default      | Description                                                                                               |
-| ---------------- | :-------: | ------------ | --------------------------------------------------------------------------------------------------------- |
-| `type`           | `string`  | **Required** | `custom:vacuum-card`                                                                                      |
-| `entity`         | `string`  | **Required** | An entity_id within the `vacuum` domain.                                                                  |
-| `battery_entity` | `string`  | Optional     | An entity_id within the `sensor` domain to display battery state and icon.                                |
-| `map`            | `string`  | Optional     | An entity_id within the `camera` domain, for streaming live vacuum map.                                   |
-| `map_refresh`    | `integer` | `5`          | Update interval for map camera in seconds                                                                 |
-| `image`          | `string`  | `default`    | Path to image of your vacuum cleaner. Better to have `png` or `svg`.                                      |
-| `show_name`      | `boolean` | `true`       | Show friendly name of the vacuum.                                                                         |
-| `show_status`    | `boolean` | `true`       | Show status of the vacuum.                                                                                |
-| `show_toolbar`   | `boolean` | `true`       | Show toolbar with actions.                                                                                |
-| `compact_view`   | `boolean` | `false`      | Compact view without image.                                                                               |
-| `stats`          | `object`  | Optional     | Custom per state stats for your vacuum cleaner                                                            |
-| `actions`        | `object`  | Optional     | Override default actions behavior with service invocations.                                               |
-| `shortcuts`      |  `array`  | Optional     | List of shortcuts shown at the right bottom part of the card with custom actions for your vacuum cleaner. |
+| Name               |   Type    | Default      | Description                                                                                               |
+| ------------------ | :-------: | ------------ | --------------------------------------------------------------------------------------------------------- |
+| `type`             | `string`  | **Required** | `custom:vacuum-card`                                                                                      |
+| `entity`           | `string`  | **Required** | An entity_id within the `vacuum` domain.                                                                  |
+| `battery_entity`   | `string`  | Optional     | An entity_id within the `sensor` domain to display battery state and icon.                                |
+| `map`              | `string`  | Optional     | An entity_id within the `camera` domain, for streaming live vacuum map.                                   |
+| `map_refresh`      | `integer` | `5`          | Update interval for map camera in seconds                                                                 |
+| `image`            | `string`  | `default`    | Path to image of your vacuum cleaner. Better to have `png` or `svg`.                                      |
+| `show_name`        | `boolean` | `true`       | Show friendly name of the vacuum.                                                                         |
+| `show_status`      | `boolean` | `true`       | Show status of the vacuum.                                                                                |
+| `show_toolbar`     | `boolean` | `true`       | Show toolbar with actions.                                                                                |
+| `compact_view`     | `boolean` | `false`      | Compact view without image.                                                                               |
+| `stats`            | `object`  | Optional     | Custom per state stats for your vacuum cleaner                                                            |
+| `actions`          | `object`  | Optional     | Override default actions behavior with service invocations.                                               |
+| `shortcuts`        |  `array`  | Optional     | List of shortcuts shown at the right bottom part of the card with custom actions for your vacuum cleaner. |
+| `selects`          |  `array`  | Optional     | Extra dropdowns in the header next to the fan speed, see [`selects` object](#selects-object).             |
+| `fan_speed_labels` | `object`  | Optional     | Labels for fan speed values, i.e. `superStrong: Max`. Overrides the built-in translations.                |
 
 ### `stats` object
 
@@ -154,6 +156,28 @@ You can defined [custom scripts][ha-scripts] for custom actions i.e cleaning spe
 | `target`       | `object` | Optional | A `HassServiceTarget`, to define a target for the current service call. |
 | `icon`         | `string` | Optional | Any icon for action button.                                             |
 | `service_data` | `object` | Optional | `service_data` for `service` call                                       |
+
+### `selects` object
+
+Shows a `select` or `input_select` entity as a dropdown in the header, like the fan speed, e.g. the mop water level:
+
+| Name     |   Type   | Default      | Description                                          |
+| -------- | :------: | ------------ | ---------------------------------------------------- |
+| `entity` | `string` | **Required** | A `select` or `input_select` entity.                 |
+| `icon`   | `string` | Optional     | Icon shown in front of the value.                    |
+| `name`   | `string` | Optional     | Accessible name of the dropdown.                     |
+| `labels` | `object` | Optional     | Labels for the option values, i.e. `middle: Medium`. |
+
+```yaml
+selects:
+  - entity: select.vacuum_water_level
+    icon: mdi:water
+    labels:
+      closed: Off
+      middle: Medium
+fan_speed_labels:
+  superStrong: Max
+```
 
 ## Theming
 

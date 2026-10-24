@@ -30,5 +30,7 @@ export default function buildConfig(
     stats: config.stats ?? {},
     actions: config.actions ?? {},
     shortcuts: config.shortcuts ?? [],
+    selects: config.selects ?? [],
+    fan_speed_labels: config.fan_speed_labels ?? {},
   };
 }
