@@ -2,6 +2,30 @@
 
 # Vacuum Card
 
+> [!NOTE]
+> **This is a personal fork of [denysdovhan/vacuum-card](https://github.com/denysdovhan/vacuum-card).**
+> It is not maintained by or affiliated with the original project. It follows upstream `main` and adds two
+> options, developed for a Lefant M5 robot vacuum with [lauff/hass-localtuya](https://github.com/lauff/hass-localtuya).
+> For everything else, use the original card and its issue tracker.
+
+## Changes in this fork
+
+Modified by [lauff](https://github.com/lauff), October 2026 (see the commit history). Both options are optional;
+without them the card behaves exactly as upstream.
+
+| Option             | Description                                                                                                          | Branch                | Upstream         |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------- | --------------------- | ---------------- |
+| `selects`          | Show `select` / `input_select` entities (e.g. the mop water level) as dropdowns in the header, next to the fan speed | `feat/header-selects` | not yet proposed |
+| `fan_speed_labels` | Own labels for fan speed values without a built-in translation, e.g. `superStrong: Super strong`                     | `feat/header-selects` | not yet proposed |
+
+The card also re-renders when the battery entity or a header select changes. Details: [`selects` object](#selects-object).
+
+**Install via HACS:** HACS → ⋮ → Custom repositories → `https://github.com/lauff/vacuum-card`, type _Dashboard_.
+Remove the original Vacuum Card (or a manually added `vacuum-card.js` resource) first; both register the same
+`custom:vacuum-card` element. Releases of this fork are tagged `vX.Y.Z-lauff.N`.
+
+---
+
 [![npm version][npm-image]][npm-url]
 [![hacs][hacs-image]][hacs-url]
 [![GitHub Sponsors][gh-sponsors-image]][gh-sponsors-url]
